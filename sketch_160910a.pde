@@ -1,19 +1,9 @@
-// TODO:
-//* [x] Split grid into rectangles
-//* [x] calculate occurances of colors
-//* [x] select two colors
-//* [ ] consider quantizing colors
-//* [ ] draw elipses
-//* [ ] get directions
-//* [ ] rotate ellipses based on direction
-//* [ ] webcam feed
-
 import processing.video.*;
 
 Capture cam;
 int canvas_width = 640;
 int canvas_height = 480;
-int block_size = 10;
+int block_size = 12;
 
 void setup() {  
   size(640, 480);
@@ -45,6 +35,9 @@ void draw() {
   
   for(int y = 0; y < cam.height; y += block_size) {
     for(int x = 0; x < cam.width; x += block_size) {
+      pushMatrix();
+      translate(x, y);
+
       IntDict hist = countColors(cam.get(x, y, block_size, block_size));
       
       String[] colors = hist.keyArray();
@@ -55,13 +48,20 @@ void draw() {
       noStroke();
       
       fill(red(c2), green(c2), blue(c2));
-      rect(x, y, block_size, block_size);
+      rect(0, 0, block_size, block_size);
       
-      fill(red(c1), green(c1), blue(c1));
-      rect(x+block_size/4, y+block_size/4, block_size/2+1, block_size/2+1);
+      color white = lerpColor(c1, #FFFFFF, 0.5);
+      fill(red(white), green(white), blue(white));
+      translate(block_size/2, block_size/2);
+      ellipse(0, 0, block_size/2+1, block_size/3+1);
       
       fill(red(c3), green(c3), blue(c3));
-      rect(x+block_size/2, y+block_size/2, block_size/4+1, block_size/4+1);
+      ellipse(0, 0, (block_size/2+1)/2, (block_size/3+1)/2);
+      
+      fill(red(c1), green(c1), blue(c1));
+      ellipse(0, 0, (block_size/2+1)/4, (block_size/3+1)/4);
+      
+      popMatrix();
     } 
   }
 }
