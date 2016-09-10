@@ -11,9 +11,9 @@
 import java.util.Map;
 
 PImage img;
-int block_size = 10;
 int canvas_width = 825;
 int canvas_height = 825;
+int block_size = 12;
 
 void setup() {  
   size(825, 825);
@@ -27,6 +27,9 @@ void draw() {
   
   for(int y = 0; y < img.height; y += block_size) {
     for(int x = 0; x < img.width; x += block_size) {
+      pushMatrix();
+      translate(x, y);
+      
       IntDict hist = countColors(img.get(x, y, block_size, block_size));
       println(hist);
       println(hist.keyArray()[0], ": ", str(hist.valueArray()[0]));
@@ -39,13 +42,20 @@ void draw() {
       noStroke();
       
       fill(red(c2), green(c2), blue(c2));
-      rect(x, y, block_size, block_size);
+      rect(0, 0, block_size, block_size);
       
       fill(red(c1), green(c1), blue(c1));
-      rect(x+block_size/4, y+block_size/4, block_size/2+1, block_size/2+1);
+      translate(block_size/2, block_size/2);
+      rotate(PI/3.0);
+      ellipse(0, 0, block_size/3+1, block_size/2+1);
       
       fill(red(c3), green(c3), blue(c3));
-      rect(x+block_size/2, y+block_size/2, block_size/4+1, block_size/4+1);
+      ellipse(0, 0, (block_size/3+1)/2, (block_size/2+1)/2);
+      
+      fill(red(c1), green(c1), blue(c1));
+      ellipse(0, 0, (block_size/3+1)/4, (block_size/2+1)/4);
+      
+      popMatrix();
     } 
   }
 }
