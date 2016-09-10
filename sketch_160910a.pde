@@ -42,14 +42,20 @@ void draw() {
       
       noStroke();
       
-      fill(red(c1), green(c1), blue(c1));
+      fill(red(c2), green(c2), blue(c2));
       rect(0, 0, block_size, block_size);
       
-      fill(red(c2), green(c2), blue(c2));
-      rect(2, 2, block_size-4, block_size-4);
+      fill(red(c1), green(c1), blue(c1));
+      rect(2, 2, 2, 2);
       
-      fill(red(c3), green(c3), blue(c3));
-      rect(4, 4, block_size-8, block_size-8);
+      fill(red(c1), green(c1), blue(c1));
+      rect(6, 2, 2, 2);
+      
+      fill(red(c1), green(c1), blue(c1));
+      rect(2, 6, 2, 2);
+      
+      fill(red(c1), green(c1), blue(c1));
+      rect(2, 6, 6, 4);
       
       popMatrix();
     } 
