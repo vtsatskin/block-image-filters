@@ -43,23 +43,22 @@ void draw() {
       String[] colors = hist.keyArray();
       color c1 = unhex(colors[0]);
       color c2 = unhex(colors[colors.length/2]);
-      color c3 = unhex(colors[colors.length/2 + colors.length/4]);
+      color c3 = unhex(colors[3*colors.length/4]);
       
       noStroke();
       
       fill(red(c2), green(c2), blue(c2));
       rect(0, 0, block_size, block_size);
-      
-      color white = lerpColor(c1, #FFFFFF, 0.5);
-      fill(red(white), green(white), blue(white));
-      translate(block_size/2, block_size/2);
-      ellipse(0, 0, block_size/2+1, block_size/3+1);
-      
-      fill(red(c3), green(c3), blue(c3));
-      ellipse(0, 0, (block_size/2+1)/2, (block_size/3+1)/2);
+
+      fill(red(c1), green(c1), blue(c1));
+      rect(2, 2, 3, 3);
       
       fill(red(c1), green(c1), blue(c1));
-      ellipse(0, 0, (block_size/2+1)/4, (block_size/3+1)/4);
+      rect(6, 2, 3, 3);
+      
+      noFill();
+      stroke(red(c1), green(c1), blue(c1));
+      arc(6, 8, 7, 3, 0, PI);
       
       popMatrix();
     } 
