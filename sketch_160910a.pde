@@ -55,7 +55,7 @@ void draw() {
       rect(2, 6, 2, 2);
       
       fill(red(c1), green(c1), blue(c1));
-      rect(2, 6, 6, 4);
+      rect(6, 6, 2, 2);
       
       popMatrix();
     } 
