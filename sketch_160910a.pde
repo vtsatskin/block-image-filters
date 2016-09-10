@@ -11,12 +11,12 @@
 import java.util.Map;
 
 PImage img;
-int canvas_width = 640;
-int canvas_height = 480;
 int block_size = 10;
+int canvas_width = 825;
+int canvas_height = 825;
 
 void setup() {  
-  size(640, 480);
+  size(825, 825);
   img = loadImage("val.jpg");
   
   noLoop();
