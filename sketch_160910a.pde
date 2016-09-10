@@ -44,16 +44,16 @@ void draw() {
       fill(red(c2), green(c2), blue(c2));
       rect(0, 0, block_size, block_size);
       
-      fill(red(c1), green(c1), blue(c1));
+      color white = lerpColor(c1, #FFFFFF, 0.5);
+      fill(red(white), green(white), blue(white));
       translate(block_size/2, block_size/2);
-      rotate(PI/3.0);
-      ellipse(0, 0, block_size/3+1, block_size/2+1);
+      ellipse(0, 0, block_size/2+1, block_size/3+1);
       
       fill(red(c3), green(c3), blue(c3));
-      ellipse(0, 0, (block_size/3+1)/2, (block_size/2+1)/2);
+      ellipse(0, 0, (block_size/2+1)/2, (block_size/3+1)/2);
       
       fill(red(c1), green(c1), blue(c1));
-      ellipse(0, 0, (block_size/3+1)/4, (block_size/2+1)/4);
+      ellipse(0, 0, (block_size/2+1)/4, (block_size/3+1)/4);
       
       popMatrix();
     } 
