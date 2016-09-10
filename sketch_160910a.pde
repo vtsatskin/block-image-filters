@@ -3,10 +3,13 @@
 //* [x] calculate occurances of colors
 //* [x] select two colors
 //* [ ] consider quantizing colors
-//* [ ] draw elipses
+//* [x] draw elipses
 //* [ ] get directions
 //* [ ] rotate ellipses based on direction
-//* [ ] webcam feed
+//* [x] webcam feed
+//* [ ] background subtraction
+//* [ ] pyramids
+//* [ ] eyes
 
 import java.util.Map;
 
@@ -31,29 +34,22 @@ void draw() {
       translate(x, y);
       
       IntDict hist = countColors(img.get(x, y, block_size, block_size));
-      println(hist);
-      println(hist.keyArray()[0], ": ", str(hist.valueArray()[0]));
       
       String[] colors = hist.keyArray();
       color c1 = unhex(colors[0]);
       color c2 = unhex(colors[colors.length/2]);
-      color c3 = unhex(colors[colors.length/2 + colors.length/4]);
+      color c3 = unhex(colors[3*colors.length/4]);
       
       noStroke();
       
-      fill(red(c2), green(c2), blue(c2));
+      fill(red(c1), green(c1), blue(c1));
       rect(0, 0, block_size, block_size);
       
-      fill(red(c1), green(c1), blue(c1));
-      translate(block_size/2, block_size/2);
-      rotate(PI/3.0);
-      ellipse(0, 0, block_size/3+1, block_size/2+1);
+      fill(red(c2), green(c2), blue(c2));
+      rect(2, 2, block_size-4, block_size-4);
       
       fill(red(c3), green(c3), blue(c3));
-      ellipse(0, 0, (block_size/3+1)/2, (block_size/2+1)/2);
-      
-      fill(red(c1), green(c1), blue(c1));
-      ellipse(0, 0, (block_size/3+1)/4, (block_size/2+1)/4);
+      rect(4, 4, block_size-8, block_size-8);
       
       popMatrix();
     } 
