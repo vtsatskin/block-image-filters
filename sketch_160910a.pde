@@ -8,28 +8,44 @@
 //* [ ] rotate ellipses based on direction
 //* [ ] webcam feed
 
-import java.util.Map;
+import processing.video.*;
 
-PImage img;
+Capture cam;
 int canvas_width = 640;
 int canvas_height = 480;
 int block_size = 10;
 
 void setup() {  
   size(640, 480);
-  img = loadImage("val.jpg");
   
-  noLoop();
+  String[] cameras = Capture.list();
+  
+  if (cameras.length == 0) {
+    println("There are no cameras available for capture.");
+    exit();
+  } else {
+    println("Available cameras:");
+    for (int i = 0; i < cameras.length; i++) {
+      println(cameras[i]);
+    }
+    
+    // The camera can be initialized directly using an 
+    // element from the array returned by list():
+    cam = new Capture(this, canvas_width, canvas_height, cameras[0]);
+    cam.start();
+  }
 }
 
 void draw() {
-  image(img, 0, 0);
+  if (cam.available()) { 
+    // Reads the new frame
+    cam.read(); 
+  } 
+  image(cam, 0, 0);
   
-  for(int y = 0; y < img.height; y += block_size) {
-    for(int x = 0; x < img.width; x += block_size) {
-      IntDict hist = countColors(img.get(x, y, block_size, block_size));
-      println(hist);
-      println(hist.keyArray()[0], ": ", str(hist.valueArray()[0]));
+  for(int y = 0; y < cam.height; y += block_size) {
+    for(int x = 0; x < cam.width; x += block_size) {
+      IntDict hist = countColors(cam.get(x, y, block_size, block_size));
       
       String[] colors = hist.keyArray();
       color c1 = unhex(colors[0]);
@@ -50,11 +66,11 @@ void draw() {
   }
 }
 
-IntDict countColors(PImage img) {
+IntDict countColors(PImage cam) {
   IntDict a = new IntDict();
-  color[] pixels = img.pixels;
+  color[] pixels = cam.pixels;
   
-  for(int i = 0; i < img.height * img.width; i += 1) {
+  for(int i = 0; i < cam.height * cam.width; i += 1) {
     String colorStr = hex(pixels[i]);
     if(a.hasKey(colorStr)) {
       a.set(colorStr, a.get(colorStr) + 1);
