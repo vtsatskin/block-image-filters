@@ -46,16 +46,14 @@ void draw() {
       rect(0, 0, block_size, block_size);
       
       fill(red(c1), green(c1), blue(c1));
-      rect(2, 2, 2, 2);
+      rect(2, 2, 3, 3);
       
       fill(red(c1), green(c1), blue(c1));
-      rect(6, 2, 2, 2);
+      rect(6, 2, 3, 3);
       
-      fill(red(c1), green(c1), blue(c1));
-      rect(2, 6, 2, 2);
-      
-      fill(red(c1), green(c1), blue(c1));
-      rect(6, 6, 2, 2);
+      noFill();
+      stroke(red(c1), green(c1), blue(c1));
+      arc(6, 8, 7, 3, 0, PI);
       
       popMatrix();
     } 
