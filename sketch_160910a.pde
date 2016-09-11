@@ -8,12 +8,16 @@
 //* [ ] rotate ellipses based on direction
 //* [x] webcam feed
 //* [ ] background subtraction
-//* [ ] pyramids
-//* [ ] eyes
+//* [x] pyramids
+//* [x] eyes
+//* [x] edges
 
 import java.util.Map;
+import gab.opencv.*;
 
 PImage img;
+PImage canny;
+OpenCV opencv;
 int canvas_width = 825;
 int canvas_height = 825;
 int block_size = 12;
@@ -22,12 +26,15 @@ void setup() {
   size(825, 825);
   img = loadImage("val.jpg");
   
+  opencv = new OpenCV(this, img);
+  opencv.findCannyEdges(20,75);
+  canny = opencv.getSnapshot();
+  
+  canny.filter(BLUR, 0.7);
   noLoop();
 }
 
 void draw() {
-  image(img, 0, 0);
-  
   for(int y = 0; y < img.height; y += block_size) {
     for(int x = 0; x < img.width; x += block_size) {
       pushMatrix();
@@ -42,19 +49,19 @@ void draw() {
       
       noStroke();
       
-      fill(red(c2), green(c2), blue(c2));
+      fill(red(c1), green(c1), blue(c1));
       rect(0, 0, block_size, block_size);
       
-      fill(red(c1), green(c1), blue(c1));
-      rect(2, 2, 3, 3);
+      PImage edgeImg = createImage(block_size, block_size, RGB);
+      edgeImg.loadPixels();
+      for(int i = 0; i < edgeImg.pixels.length; i++) {
+        edgeImg.pixels[i] = c1;
+      }
+      edgeImg.updatePixels();
+      edgeImg.mask(canny.get(x, y, block_size, block_size));
       
-      fill(red(c1), green(c1), blue(c1));
-      rect(6, 2, 3, 3);
-      
-      noFill();
-      stroke(red(c1), green(c1), blue(c1));
-      arc(6, 8, 7, 3, 0, PI);
-      
+      image(edgeImg, 0, 0);
+
       popMatrix();
     } 
   }
