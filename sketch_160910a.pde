@@ -55,7 +55,7 @@ void draw() {
       PImage edgeImg = createImage(block_size, block_size, RGB);
       edgeImg.loadPixels();
       for(int i = 0; i < edgeImg.pixels.length; i++) {
-        edgeImg.pixels[i] = c1;
+        edgeImg.pixels[i] = c2;
       }
       edgeImg.updatePixels();
       edgeImg.mask(canny.get(x, y, block_size, block_size));
