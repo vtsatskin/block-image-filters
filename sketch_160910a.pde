@@ -70,6 +70,11 @@ void drawSmiles(Capture cam, int x, int y) {
 }
   
 
+/**
+ * Returns an IntDict with keys mapping to colours with value set to
+ * frequency of a colour's occurrence. Keys are sorted by values,
+ * with highest frequency colours at the start.
+ */
 IntDict countColors(PImage cam) {
   IntDict a = new IntDict();
   color[] pixels = cam.pixels;
