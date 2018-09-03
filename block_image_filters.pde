@@ -45,8 +45,8 @@ void draw() {
 
       // drawSmiles(cam, x, y);
       // drawMaxFreqPixelate(cam, x, y);
-      // drawPixelateWithCornerDot(cam, x, y);
-      drawEyeBalls(cam, x, y);
+      drawPixelateWithCornerDot(cam, x, y);
+      // drawEyeBalls(cam, x, y);
       
       popMatrix();
     } 
