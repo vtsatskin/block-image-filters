@@ -31,6 +31,7 @@ void draw() {
     // Reads the new frame
     cam.read(); 
   } 
+
   image(cam, 0, 0);
   
   for(int y = 0; y < cam.height; y += block_size) {
@@ -38,7 +39,8 @@ void draw() {
       pushMatrix();
       translate(x, y);
 
-      drawSmiles(cam, x, y);
+      // drawSmiles(cam, x, y);
+      drawMaxFreqPixelate(cam, x, y);
       
       popMatrix();
     } 
@@ -67,6 +69,18 @@ void drawSmiles(Capture cam, int x, int y) {
   noFill();
   stroke(red(c1), green(c1), blue(c1));
   arc(6, 8, 7, 3, 0, PI);
+}
+
+void drawMaxFreqPixelate(Capture cam, int x, int y) {
+  IntDict hist = countColors(cam.get(x, y, block_size, block_size));
+  
+  String[] colors = hist.keyArray();
+  color c1 = unhex(colors[0]);
+
+  fill(red(c1), green(c1), blue(c1));
+  noStroke();
+  
+  rect(0, 0, block_size, block_size);
 }
   
 
