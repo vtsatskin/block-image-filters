@@ -1,13 +1,23 @@
 import processing.video.*;
 
 Capture cam;
-int canvas_width = 640;
-int canvas_height = 480;
+int canvas_width = 1280;
+int canvas_height = 960;
+int cam_width = 640;
+int cam_height = 480;
 int block_size = 12;
+int scale_ratio = canvas_width / cam_width;
+boolean renderFullScreen = false;
+
+void settings() {
+  if(renderFullScreen) {
+    fullScreen();
+  } else {
+    size(canvas_width, canvas_height);
+  }
+}
 
 void setup() {  
-  size(640, 480);
-  
   String[] cameras = Capture.list();
   
   if (cameras.length == 0) {
@@ -21,7 +31,7 @@ void setup() {
     
     // The camera can be initialized directly using an 
     // element from the array returned by list():
-    cam = new Capture(this, canvas_width, canvas_height, cameras[0]);
+    cam = new Capture(this, cam_width, cam_height, cameras[0]);
     cam.start();
   }
 
@@ -41,7 +51,7 @@ void draw() {
   for(int y = 0; y < cam.height; y += block_size) {
     for(int x = 0; x < cam.width; x += block_size) {
       pushMatrix();
-      translate(x, y);
+      translate(x * scale_ratio, y * scale_ratio);
 
       // drawSmiles(cam, x, y);
       // drawMaxFreqPixelate(cam, x, y);
@@ -103,10 +113,15 @@ void drawPixelateWithCornerDot(Capture cam, int x, int y) {
   noStroke();
   
   fill(red(c2), green(c2), blue(c2));
-  rect(0, 0, block_size, block_size);
+  rect(0, 0, block_size * scale_ratio, block_size * scale_ratio);
   
   fill(red(c1), green(c1), blue(c1));
-  rect(block_size/2, block_size/2, block_size/2, block_size/2);
+  rect(
+    block_size/2 * scale_ratio,
+    block_size/2 * scale_ratio,
+    block_size/2 * scale_ratio,
+    block_size/2 * scale_ratio
+  );
 }
 
 void drawEyeBalls(Capture cam, int x, int y) {
