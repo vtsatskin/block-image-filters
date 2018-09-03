@@ -2,4 +2,6 @@
 
 ## Running
 
+```
 processing-java --sketch=`pwd` --run
+```
