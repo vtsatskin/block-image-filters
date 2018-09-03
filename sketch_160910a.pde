@@ -38,32 +38,37 @@ void draw() {
       pushMatrix();
       translate(x, y);
 
-      IntDict hist = countColors(cam.get(x, y, block_size, block_size));
-      
-      String[] colors = hist.keyArray();
-      color c1 = unhex(colors[0]);
-      color c2 = unhex(colors[colors.length/2]);
-      color c3 = unhex(colors[3*colors.length/4]);
-      
-      noStroke();
-      
-      fill(red(c2), green(c2), blue(c2));
-      rect(0, 0, block_size, block_size);
-
-      fill(red(c1), green(c1), blue(c1));
-      rect(2, 2, 3, 3);
-      
-      fill(red(c1), green(c1), blue(c1));
-      rect(6, 2, 3, 3);
-      
-      noFill();
-      stroke(red(c1), green(c1), blue(c1));
-      arc(6, 8, 7, 3, 0, PI);
+      drawSmiles(cam, x, y);
       
       popMatrix();
     } 
   }
 }
+
+void drawSmiles(Capture cam, int x, int y) {
+  IntDict hist = countColors(cam.get(x, y, block_size, block_size));
+  
+  String[] colors = hist.keyArray();
+  color c1 = unhex(colors[0]);
+  color c2 = unhex(colors[colors.length/2]);
+  color c3 = unhex(colors[3*colors.length/4]);
+  
+  noStroke();
+  
+  fill(red(c2), green(c2), blue(c2));
+  rect(0, 0, block_size, block_size);
+  
+  fill(red(c1), green(c1), blue(c1));
+  rect(2, 2, 3, 3);
+  
+  fill(red(c1), green(c1), blue(c1));
+  rect(6, 2, 3, 3);
+  
+  noFill();
+  stroke(red(c1), green(c1), blue(c1));
+  arc(6, 8, 7, 3, 0, PI);
+}
+  
 
 IntDict countColors(PImage cam) {
   IntDict a = new IntDict();
