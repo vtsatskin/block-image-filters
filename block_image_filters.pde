@@ -24,6 +24,10 @@ void setup() {
     cam = new Capture(this, canvas_width, canvas_height, cameras[0]);
     cam.start();
   }
+
+  // setup text
+  textAlign(LEFT);
+  textSize(32);
 }
 
 void draw() {
@@ -47,6 +51,9 @@ void draw() {
       popMatrix();
     } 
   }
+
+  fill(255);
+  text(str(frameRate), 0, 32);
 }
 
 void drawSmiles(Capture cam, int x, int y) {
