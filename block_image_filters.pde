@@ -1,20 +1,27 @@
 import processing.video.*;
 
+final int CANVAS_WIDTH = 1280;
+final int CANVAS_HEIGHT = 720;
+final int CAM_WIDTH = 320;
+final int CAM_HEIGHT = 180;
+final int BLOCK_SIZE = 6;
+final boolean RENDER_FULL_SCREEN = true;
+final boolean SHOW_FPS = true;
+
 Capture cam;
-int canvas_width = 1280;
-int canvas_height = 960;
-int cam_width = 640;
-int cam_height = 480;
-int block_size = 12;
-int scale_ratio = canvas_width / cam_width;
-boolean renderFullScreen = false;
+PGraphics pg;
 
 void settings() {
-  if(renderFullScreen) {
+  if(RENDER_FULL_SCREEN) {
     fullScreen();
   } else {
-    size(canvas_width, canvas_height);
+    size(CANVAS_WIDTH, CANVAS_HEIGHT);
   }
+
+  // we render to a smaller graphics buffer and upscale it to fit the canvas
+  // size. Turn off smoothing so nearest-neighbours interpolation is used
+  // instead of whatever processing uses (maybe bilinear/bicubic).
+  noSmooth();
 }
 
 void setup() {  
@@ -31,13 +38,15 @@ void setup() {
     
     // The camera can be initialized directly using an 
     // element from the array returned by list():
-    cam = new Capture(this, cam_width, cam_height, cameras[0]);
+    cam = new Capture(this, CAM_WIDTH, CAM_HEIGHT, cameras[0]);
     cam.start();
   }
 
   // setup text
   textAlign(LEFT);
   textSize(32);
+
+  pg = createGraphics(CAM_WIDTH, CAM_HEIGHT);
 }
 
 void draw() {
@@ -46,107 +55,108 @@ void draw() {
     cam.read(); 
   } 
 
-  image(cam, 0, 0);
+  pg.beginDraw();
   
-  for(int y = 0; y < cam.height; y += block_size) {
-    for(int x = 0; x < cam.width; x += block_size) {
-      pushMatrix();
-      translate(x * scale_ratio, y * scale_ratio);
+  for(int y = 0; y < cam.height; y += BLOCK_SIZE) {
+    for(int x = 0; x < cam.width; x += BLOCK_SIZE) {
+      pg.pushMatrix();
+      pg.translate(x, y);
 
-      // drawSmiles(cam, x, y);
-      // drawMaxFreqPixelate(cam, x, y);
-      drawPixelateWithCornerDot(cam, x, y);
-      // drawEyeBalls(cam, x, y);
+      // drawSmiles(pg, cam, x, y);
+      // drawMaxFreqPixelate(pg, cam, x, y);
+      drawPixelateWithCornerDot(pg, cam, x, y);
+      // drawEyeBalls(pg, cam, x, y);
       
-      popMatrix();
+      pg.popMatrix();
     } 
   }
 
-  fill(255);
-  text(str(frameRate), 0, 32);
+  if(SHOW_FPS) {
+    pg.fill(255);
+    pg.text(str(frameRate), 0, 32);
+  }
+
+  pg.endDraw();
+
+  image(pg, 0, 0, width, height);
 }
 
-void drawSmiles(Capture cam, int x, int y) {
-  IntDict hist = countColors(cam.get(x, y, block_size, block_size));
+void drawSmiles(PGraphics pg, Capture cam, int x, int y) {
+  IntDict hist = countColors(cam.get(x, y, BLOCK_SIZE, BLOCK_SIZE));
   
   String[] colors = hist.keyArray();
   color c1 = unhex(colors[0]);
   color c2 = unhex(colors[colors.length/2]);
   color c3 = unhex(colors[3*colors.length/4]);
   
-  noStroke();
+  pg.noStroke();
   
-  fill(red(c2), green(c2), blue(c2));
-  rect(0, 0, block_size, block_size);
+  pg.fill(red(c2), green(c2), blue(c2));
+  pg.rect(0, 0, BLOCK_SIZE, BLOCK_SIZE);
   
-  fill(red(c1), green(c1), blue(c1));
-  rect(2, 2, 3, 3);
+  pg.fill(red(c1), green(c1), blue(c1));
+  pg.rect(2, 2, 3, 3);
   
-  fill(red(c1), green(c1), blue(c1));
-  rect(6, 2, 3, 3);
+  pg.fill(red(c1), green(c1), blue(c1));
+  pg.rect(6, 2, 3, 3);
   
-  noFill();
-  stroke(red(c1), green(c1), blue(c1));
-  arc(6, 8, 7, 3, 0, PI);
+  pg.noFill();
+  pg.stroke(red(c1), green(c1), blue(c1));
+  pg.arc(6, 8, 7, 3, 0, PI);
 }
 
-void drawMaxFreqPixelate(Capture cam, int x, int y) {
-  IntDict hist = countColors(cam.get(x, y, block_size, block_size));
+void drawMaxFreqPixelate(PGraphics pg, Capture cam, int x, int y) {
+  IntDict hist = countColors(cam.get(x, y, BLOCK_SIZE, BLOCK_SIZE));
   
   String[] colors = hist.keyArray();
   color c1 = unhex(colors[0]);
 
-  noStroke();
+  pg.noStroke();
 
-  fill(red(c1), green(c1), blue(c1));
+  pg.fill(red(c1), green(c1), blue(c1));
   
-  rect(0, 0, block_size, block_size);
+  pg.rect(0, 0, BLOCK_SIZE, BLOCK_SIZE);
 }
 
-void drawPixelateWithCornerDot(Capture cam, int x, int y) {
-  IntDict hist = countColors(cam.get(x, y, block_size, block_size));
+void drawPixelateWithCornerDot(PGraphics pg, Capture cam, int x, int y) {
+  IntDict hist = countColors(cam.get(x, y, BLOCK_SIZE, BLOCK_SIZE));
   
   String[] colors = hist.keyArray();
   color c1 = unhex(colors[0]);
   color c2 = unhex(colors[colors.length/2]);
 
-  noStroke();
+  pg.noStroke();
   
-  fill(red(c2), green(c2), blue(c2));
-  rect(0, 0, block_size * scale_ratio, block_size * scale_ratio);
+  pg.fill(c2);
+  pg.rect(0, 0, BLOCK_SIZE, BLOCK_SIZE);
   
-  fill(red(c1), green(c1), blue(c1));
-  rect(
-    block_size/2 * scale_ratio,
-    block_size/2 * scale_ratio,
-    block_size/2 * scale_ratio,
-    block_size/2 * scale_ratio
-  );
+  pg.fill(c1);
+  pg.rect(BLOCK_SIZE/2, BLOCK_SIZE/2, BLOCK_SIZE/2, BLOCK_SIZE/2);
 }
 
-void drawEyeBalls(Capture cam, int x, int y) {
-  IntDict hist = countColors(cam.get(x, y, block_size, block_size));
+void drawEyeBalls(PGraphics pg, Capture cam, int x, int y) {
+  IntDict hist = countColors(cam.get(x, y, BLOCK_SIZE, BLOCK_SIZE));
   
   String[] colors = hist.keyArray();
   color c1 = unhex(colors[0]);
   color c2 = unhex(colors[colors.length/2]);
   color c3 = unhex(colors[colors.length/2 + colors.length/4]);
   
-  noStroke();
+  pg.noStroke();
   
-  fill(red(c2), green(c2), blue(c2));
-  rect(0, 0, block_size, block_size);
+  pg.fill(red(c2), green(c2), blue(c2));
+  pg.rect(0, 0, BLOCK_SIZE, BLOCK_SIZE);
   
   color white = lerpColor(c1, #FFFFFF, 0.5);
-  fill(red(white), green(white), blue(white));
-  translate(block_size/2, block_size/2);
-  ellipse(0, 0, block_size/2+1, block_size/3+1);
+  pg.fill(red(white), green(white), blue(white));
+  pg.translate(BLOCK_SIZE/2, BLOCK_SIZE/2);
+  pg.ellipse(0, 0, BLOCK_SIZE/2+1, BLOCK_SIZE/3+1);
   
-  fill(red(c3), green(c3), blue(c3));
-  ellipse(0, 0, (block_size/2+1)/2, (block_size/3+1)/2);
+  pg.fill(red(c3), green(c3), blue(c3));
+  pg.ellipse(0, 0, (BLOCK_SIZE/2+1)/2, (BLOCK_SIZE/3+1)/2);
   
-  fill(red(c1), green(c1), blue(c1));
-  ellipse(0, 0, (block_size/2+1)/4, (block_size/3+1)/4);
+  pg.fill(red(c1), green(c1), blue(c1));
+  pg.ellipse(0, 0, (BLOCK_SIZE/2+1)/4, (BLOCK_SIZE/3+1)/4);
 }
 
 /**
