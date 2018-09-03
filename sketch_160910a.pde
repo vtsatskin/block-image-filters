@@ -40,7 +40,8 @@ void draw() {
       translate(x, y);
 
       // drawSmiles(cam, x, y);
-      drawMaxFreqPixelate(cam, x, y);
+      // drawMaxFreqPixelate(cam, x, y);
+      drawPixelateWithCornerDot(cam, x, y);
       
       popMatrix();
     } 
@@ -77,12 +78,28 @@ void drawMaxFreqPixelate(Capture cam, int x, int y) {
   String[] colors = hist.keyArray();
   color c1 = unhex(colors[0]);
 
-  fill(red(c1), green(c1), blue(c1));
   noStroke();
+
+  fill(red(c1), green(c1), blue(c1));
   
   rect(0, 0, block_size, block_size);
 }
+
+void drawPixelateWithCornerDot(Capture cam, int x, int y) {
+  IntDict hist = countColors(cam.get(x, y, block_size, block_size));
   
+  String[] colors = hist.keyArray();
+  color c1 = unhex(colors[0]);
+  color c2 = unhex(colors[colors.length/2]);
+
+  noStroke();
+  
+  fill(red(c2), green(c2), blue(c2));
+  rect(0, 0, block_size, block_size);
+  
+  fill(red(c1), green(c1), blue(c1));
+  rect(block_size/2, block_size/2, block_size/2, block_size/2);
+}
 
 /**
  * Returns an IntDict with keys mapping to colours with value set to
